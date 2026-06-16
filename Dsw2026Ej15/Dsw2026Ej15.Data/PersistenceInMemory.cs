@@ -1,4 +1,5 @@
 ﻿using Dsw2026Ej15.Domain;
+using System.Text.Json;
 
 namespace Dsw2026Ej15.Data
 {
@@ -49,6 +50,27 @@ namespace Dsw2026Ej15.Data
         }
 
         //JSON
+
+        private List<Speciality> LoadSpecialities()
+        {
+            var path = "specialities.json";
+
+            if(!File.Exists(path))
+            {
+                return new List<Speciality>();
+            }
+
+            var json = File.ReadAllText(path);
+
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
+            var resultado = JsonSerializer.Deserialize<List<Speciality>>(json, options);
+
+            return resultado ?? new List<Speciality>();
+        }
 
     }
 }
