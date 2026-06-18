@@ -15,7 +15,7 @@ namespace Dsw2026Ej15.Api.Middleware
         {
             try
             {
-                await _next(context); // continúa con el siguiente paso del pipeline
+                await _next(context);
             }
             catch (ValidationException ex)
             {
@@ -27,7 +27,7 @@ namespace Dsw2026Ej15.Api.Middleware
             {
                 context.Response.StatusCode = 500;
                 context.Response.ContentType = "text/plain";
-                await context.Response.WriteAsync("Ocurrió un error interno.");
+                await context.Response.WriteAsync("Ocurrio un error interno");
             }
         }
     }

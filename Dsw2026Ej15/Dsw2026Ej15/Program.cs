@@ -6,7 +6,7 @@ using Dsw2026Ej15.Api.Middleware;
 namespace Dsw2026Ej15.Api
 {
     public class Program
-    {// configurar el swager con el paquete nuget
+    {
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -18,7 +18,7 @@ namespace Dsw2026Ej15.Api
             builder.Services.AddHealthChecks();
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();

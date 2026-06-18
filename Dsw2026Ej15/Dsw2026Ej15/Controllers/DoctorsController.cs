@@ -22,7 +22,7 @@ namespace Dsw2026Ej15.Controllers
         public async Task<IActionResult> CreateDoctors([FromBody] DoctorModel.Request request) { 
             
             if (string.IsNullOrWhiteSpace(request.Name) || string.IsNullOrWhiteSpace(request.LicenseNumber)) { 
-                throw new ValidationException("Nombre y Matrícula son requeridos.");//BadRequest("Escribi bien,Nombre y Matriculas son  requeridos");
+                throw new ValidationException("Nombre y Matrícula son requeridos."); //BadRequest("Escribi bien,Nombre y Matriculas son  requeridos");
             }
             var speciality = _persistence.GetSpeciality(request.SpecialityId);
 
@@ -56,7 +56,7 @@ namespace Dsw2026Ej15.Controllers
                 var response = new DoctorModel.Response(
                     doctor.Name,
                     doctor.LicenseNumber,
-                    doctor.Speciality?.Name
+                    doctor.Speciality.Name
                     );
                 return Ok(response);
             }
@@ -76,8 +76,6 @@ namespace Dsw2026Ej15.Controllers
             }
         }
         
-        // hacer los otros metodos del endpoint
-
 
     }
 }

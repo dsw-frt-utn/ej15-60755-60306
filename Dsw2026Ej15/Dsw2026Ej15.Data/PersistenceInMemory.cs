@@ -51,8 +51,6 @@ namespace Dsw2026Ej15.Data
             return _specialities;
         }
 
-        
-
         public Speciality? GetSpeciality(Guid id)
         {
             return _specialities.SingleOrDefault(d => d.Id == id);
