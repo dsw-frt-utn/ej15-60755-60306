@@ -1,12 +1,13 @@
 using Dsw2026Ej15.Data;
 using Microsoft.AspNetCore.Mvc;
-using Dsw2026Ej15.Domain.Interfaces;
 using Dsw2026Ej15.Api.Models;
+using Dsw2026Ej15.Domain.Interfaces;
+using Dsw2026Ej15.Domain.Entities;
 
 namespace Dsw2026Ej15.Controllers
 {
     [ApiController]
-    [Route("[controller]")]// corregir la ruta para que sea sin mayuscula : doctor
+    [Route("api/doctors")]
     public class DoctorsController : ControllerBase
     {
 
@@ -17,19 +18,62 @@ namespace Dsw2026Ej15.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateDoctors([FromBody]DoctorsModel.Request request) { // From body recupera los datos del body
-            // requerido no venga nulo, vacio, o espacio en blanco
+        public async Task<IActionResult> CreateDoctors([FromBody] DoctorModel.Request request) { 
+            
             if (string.IsNullOrWhiteSpace(request.Name) || string.IsNullOrWhiteSpace(request.LicenseNumber)) return BadRequest("Escribi bien,Nombre y Matriculas son  requeridos");
             var speciality = _persistence.GetSpeciality(request.SpecialityId);
             if (speciality == null) {
                 return BadRequest("La especialidad no existe");
             }
-            // implementar la logica de agregar  el doctor a la clase de persistencia
+            Doctor doctor = new Doctor(request.Name, request.LicenseNumber, speciality);
             
+            _persistence.AddDoctor(doctor);
             return Created();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetDoctors() {
+            var doctors = _persistence.GetDoctorsActive();
+
+            return Ok(doctors);
+        
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetDoctorActive(Guid id)
+        {
+            var doctor = _persistence.GetDoctorActive(id);
+            if (doctor == null)
+            {
+                return NotFound("Medico no esta activo o no se encuentra");
+            }
+            else
+            {
+                var response = new DoctorModel.Response(
+                    doctor.Name,
+                    doctor.LicenseNumber,
+                    doctor.Speciality?.Name
+                    );
+                return Ok(response);
+            }
+
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteDoctor(Guid id) {
+            var doctor = _persistence.GetDoctorActive(id);
+
+            if (doctor == null) {
+                return NotFound("El doctor no se encuentra activo o no esta guardado");
+            }
+            else
+            {
+                doctor.Desactive();
+                return NoContent();
+            }
+        }
+        
         // hacer los otros metodos del endpoint
-    
-    
+
+
     }
 }

@@ -6,73 +6,78 @@ using Dsw2026Ej15.Domain.Interfaces;
 
 namespace Dsw2026Ej15.Data
 {
-    // Cambiar el nombre de las clases en ingles
     public class PersistenceInMemory : IPersistence
     {
-        List<Doctor> Doctores = [];
-        List<Speciality> Especialidades = [];
+        List<Doctor> _doctors = [];
+        List<Speciality> _specialities = [];
 
-        public PersistenceInMemory() {
+        public PersistenceInMemory()
+        {
             this.LoadSpecialities();
         }
-        // MÉTODOS
-        public void AgregarDoctor(Doctor doctor)
+
+        
+        public void AddDoctor(Doctor doctor)
         {
-            Doctores.Add(doctor);
+            _doctors.Add(doctor);
         }
 
-        public void AgregarEspecialidad(Speciality especialidad)
+        public Doctor? GetDoctorActive(Guid id)
         {
-            Especialidades.Add(especialidad);
+        return _doctors.SingleOrDefault(d => d.Id == id && d.IsActive);
+         }
+        public void AddSpeciality(Speciality especialidad)
+        {
+            _specialities.Add(especialidad);
         }
 
-        public void EliminarDoctor(Doctor doctor)
+        public void RemoveDoctor(Doctor doctor)
         {
-            Doctores.Remove(doctor);
+            _doctors.Remove(doctor);
         }
 
-        public void EliminarEspecialidad(Speciality especialidad)
+        public void RemoveSpeciality(Speciality especialidad)
         {
-            Especialidades.Remove(especialidad);
+            _specialities.Remove(especialidad);
         }
 
-        public List<Doctor> GetDoctores()
+        public List<Doctor> GetDoctorsActive()
         {
-            return Doctores;
+            return _doctors.Where(d=>d.IsActive).ToList();
         }
 
-        public List<Speciality> GetEspecialidades()
+        public List<Speciality> GetSpecialities()
         {
-            return Especialidades;
+            return _specialities;
         }
 
-        public Doctor? GetDoctor(Guid id)
-        {
-            return Doctores.Find(d => d.Id == id);
-        }
+        
 
         public Speciality? GetSpeciality(Guid id)
         {
-            return Especialidades.SingleOrDefault(d => d.Id == id);
+            return _specialities.SingleOrDefault(d => d.Id == id);
         }
 
-        //JSON
-
-        
-        private List<Speciality> LoadSpecialities()
+        // JSON
+        private void LoadSpecialities()
         {
-            // buscar la ruta del archivo
-            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Sources", "specialities.json");
-            var json = File.ReadAllText(path);
-            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            try
+            {
+                var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Sources", "specialities.json");
+                var json = File.ReadAllText(path);
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
 
-            var speciality = JsonSerializer.Deserialize<List<SpecialityDto>>(json, options);
+                var speciality = JsonSerializer.Deserialize<List<SpecialityDto>>(json, options);
 
-           
-            List<Speciality> _speciality = [.. speciality.Select(s => new Speciality(s.Name, s.Description, s.Id))];
 
-            return _speciality; 
+                 _specialities = [.. speciality.Select(s => new Speciality(s.Name, s.Description, s.Id))];
+            }
+            catch (Exception e){ }
         }
 
+        public bool GetActive(Guid id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
