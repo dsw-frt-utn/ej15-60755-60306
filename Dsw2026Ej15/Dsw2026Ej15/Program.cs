@@ -1,5 +1,6 @@
 using Dsw2026Ej15.Domain.Interfaces;
 using Dsw2026Ej15.Data;
+using Dsw2026Ej15.Api.Middleware;
 
 
 namespace Dsw2026Ej15.Api
@@ -14,7 +15,7 @@ namespace Dsw2026Ej15.Api
             builder.Services.AddControllers();
             builder.Services.AddSwaggerGen();
             builder.Services.AddSingleton<IPersistence, PersistenceInMemory>();
-
+            builder.Services.AddHealthChecks();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -23,12 +24,12 @@ namespace Dsw2026Ej15.Api
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            app.UseMiddleware<ExceptionMiddleware>();
             app.UseAuthorization();
 
 
             app.MapControllers();
-
+            app.MapHealthChecks("/health-check");
             app.Run();
         }
     }

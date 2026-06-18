@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Dsw2026Ej15.Api.Models;
 using Dsw2026Ej15.Domain.Interfaces;
 using Dsw2026Ej15.Domain.Entities;
+using Dsw2026Ej15.Api.Exceptions;
 
 namespace Dsw2026Ej15.Controllers
 {
@@ -20,10 +21,13 @@ namespace Dsw2026Ej15.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateDoctors([FromBody] DoctorModel.Request request) { 
             
-            if (string.IsNullOrWhiteSpace(request.Name) || string.IsNullOrWhiteSpace(request.LicenseNumber)) return BadRequest("Escribi bien,Nombre y Matriculas son  requeridos");
+            if (string.IsNullOrWhiteSpace(request.Name) || string.IsNullOrWhiteSpace(request.LicenseNumber)) { 
+                throw new ValidationException("Nombre y Matrícula son requeridos.");//BadRequest("Escribi bien,Nombre y Matriculas son  requeridos");
+            }
             var speciality = _persistence.GetSpeciality(request.SpecialityId);
+
             if (speciality == null) {
-                return BadRequest("La especialidad no existe");
+                throw new ValidationException("La especialidad no existe"); //BadRequest("La especialidad no existe");
             }
             Doctor doctor = new Doctor(request.Name, request.LicenseNumber, speciality);
             
