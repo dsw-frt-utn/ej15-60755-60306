@@ -24,41 +24,29 @@ namespace Dsw2026Ej15.Data
 
         public Doctor? GetDoctorActive(Guid id)
         {
-        return _doctors.SingleOrDefault(d => d.Id == id && d.IsActive);
+            return _doctors.SingleOrDefault(d => d.Id == id && d.IsActive);
          }
-        public void AddSpeciality(Speciality especialidad)
-        {
-            _specialities.Add(especialidad);
-        }
+    
 
         public void RemoveDoctor(Doctor doctor)
         {
             _doctors.Remove(doctor);
         }
 
-        public void RemoveSpeciality(Speciality especialidad)
-        {
-            _specialities.Remove(especialidad);
-        }
+        
 
         public List<Doctor> GetDoctorsActive()
         {
             return _doctors.Where(d=>d.IsActive).ToList();
         }
 
-        public List<Speciality> GetSpecialities()
-        {
-            return _specialities;
-        }
 
-        
 
         public Speciality? GetSpeciality(Guid id)
         {
             return _specialities.SingleOrDefault(d => d.Id == id);
         }
 
-        // JSON
         private void LoadSpecialities()
         {
             try
@@ -75,9 +63,6 @@ namespace Dsw2026Ej15.Data
             catch (Exception e){ }
         }
 
-        public bool GetActive(Guid id)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

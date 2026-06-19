@@ -1,4 +1,6 @@
 ﻿using Dsw2026Ej15.Api.Exceptions;
+using System.Net;
+using System.Text.Json;
 
 namespace Dsw2026Ej15.Api.Middleware
 {
@@ -15,20 +17,31 @@ namespace Dsw2026Ej15.Api.Middleware
         {
             try
             {
-                await _next(context); // continúa con el siguiente paso del pipeline
-            }
-            catch (ValidationException ex)
-            {
-                context.Response.StatusCode = 400;
-                context.Response.ContentType = "text/plain";
-                await context.Response.WriteAsync(ex.Message);
+                await _next(context); 
             }
             catch (Exception ex)
             {
-                context.Response.StatusCode = 500;
-                context.Response.ContentType = "text/plain";
-                await context.Response.WriteAsync("Ocurrió un error interno.");
+                HandleExceptionAsync(context,ex);
+                
             }
+           
+
+
         }
+        public async Task HandleExceptionAsync(HttpContext context,Exception ex)
+        {
+            HttpStatusCode status = HttpStatusCode.InternalServerError;
+            string message = "Ocurrio un error inesperado";
+            if (ex is ValidationException ve)
+            {
+                status = HttpStatusCode.BadRequest;
+                message = ve.Message;
+            }
+            var result = JsonSerializer.Serialize(new { error=message});
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = (int)status;
+            await context.Response.WriteAsync(result);
+        }
+
     }
 }

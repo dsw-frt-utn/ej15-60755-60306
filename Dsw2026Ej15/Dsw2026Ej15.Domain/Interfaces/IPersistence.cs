@@ -9,13 +9,11 @@ namespace Dsw2026Ej15.Domain.Interfaces
     public interface IPersistence
     {
         void AddDoctor(Doctor doctor);
-  
-
+ 
         void RemoveDoctor(Doctor doctor);
   
 
         List<Doctor> GetDoctorsActive();
-        List<Speciality> GetSpecialities();
 
         Doctor? GetDoctorActive(Guid id);
 
