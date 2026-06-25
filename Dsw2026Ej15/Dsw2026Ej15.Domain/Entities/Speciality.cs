@@ -5,13 +5,12 @@
         public string Name { get; init; }
         public string Description { get;private set; }
 
+        private Speciality() { }
         public Speciality(string name, string description,Guid? id=null):base(id)
         {
             Name = name;
             Description = description;
         }
-
-
 
     }
 }

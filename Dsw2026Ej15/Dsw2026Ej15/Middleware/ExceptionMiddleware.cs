@@ -30,12 +30,22 @@ namespace Dsw2026Ej15.Api.Middleware
         }
         public async Task HandleExceptionAsync(HttpContext context,Exception ex)
         {
-            HttpStatusCode status = HttpStatusCode.InternalServerError;
-            string message = "Ocurrio un error inesperado";
+            HttpStatusCode status;
+            string message;
             if (ex is ValidationException ve)
             {
                 status = HttpStatusCode.BadRequest;
                 message = ve.Message;
+            }
+            else if (ex is EntityNotFoundException ve2)
+            {
+                status = HttpStatusCode.NotFound;
+                message = ve2.Message;
+
+            }
+            else {
+                status = HttpStatusCode.InternalServerError;
+                message = "Ocurrio un error inesperado";
             }
             var result = JsonSerializer.Serialize(new { error=message});
             context.Response.ContentType = "application/json";

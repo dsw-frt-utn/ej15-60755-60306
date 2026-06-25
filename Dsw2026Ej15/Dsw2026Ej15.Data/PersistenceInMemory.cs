@@ -16,38 +16,39 @@ namespace Dsw2026Ej15.Data
             this.LoadSpecialities();
         }
 
-        
-        public void AddDoctor(Doctor doctor)
+       
+        public async Task AddDoctor(Doctor doctor)
         {
             _doctors.Add(doctor);
         }
 
-        public Doctor? GetDoctorActive(Guid id)
+        public async Task<Doctor?> GetDoctorById(Guid id)
         {
             return _doctors.SingleOrDefault(d => d.Id == id && d.IsActive);
          }
     
 
-        public void RemoveDoctor(Doctor doctor)
+        public async Task DeleteDoctor(Guid id)
         {
-            _doctors.Remove(doctor);
+            var id_ = await GetDoctorById(id);
+            _doctors.Remove(id_);
         }
 
         
 
-        public List<Doctor> GetDoctorsActive()
+        public async Task<IEnumerable<Doctor>> GetAllDoctor()
         {
             return _doctors.Where(d=>d.IsActive).ToList();
         }
 
 
 
-        public Speciality? GetSpeciality(Guid id)
+        public async Task<Speciality?> GetSpecialityById(Guid id)
         {
             return _specialities.SingleOrDefault(d => d.Id == id);
         }
 
-        private void LoadSpecialities()
+        private  async Task LoadSpecialities()
         {
             try
             {
@@ -63,6 +64,9 @@ namespace Dsw2026Ej15.Data
             catch (Exception e){ }
         }
 
-        
+        public async Task UpdateDoctor(Doctor doctor) {
+            _doctors.Remove(doctor);
+            _doctors.Add(doctor);
+        }
     }
 }
