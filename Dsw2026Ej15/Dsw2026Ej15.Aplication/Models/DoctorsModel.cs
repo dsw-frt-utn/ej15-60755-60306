@@ -1,5 +1,5 @@
 ﻿
-namespace Dsw2026Ej15.Api.Models
+namespace Dsw2026Ej15.Aplication.Models
 {
     public record DoctorModel
     {

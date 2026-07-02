@@ -9,9 +9,6 @@ namespace Dsw2026Ej15.Domain.Interfaces
     public interface IPersistence
     {
         Task AddDoctor(Doctor doctor);
- 
-       
-  
 
         Task<IEnumerable<Doctor>> GetAllDoctor();
 
@@ -21,6 +18,8 @@ namespace Dsw2026Ej15.Domain.Interfaces
 
          Task UpdateDoctor(Doctor doctor);
 
-         Task DeleteDoctor(Guid id);
+        
+
+  
     }
 }

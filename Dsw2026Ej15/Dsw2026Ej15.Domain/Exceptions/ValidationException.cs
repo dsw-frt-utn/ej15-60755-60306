@@ -1,4 +1,4 @@
-﻿namespace Dsw2026Ej15.Api.Exceptions
+﻿namespace Dsw2026Ej15.Domain.Exceptions
 {
     public class ValidationException: Exception
     {
