@@ -1,0 +1,52 @@
+﻿using Dsw2026Ej15.Data.Dto;
+using Dsw2026Ej15.Domain.Entities;
+using Dsw2026Ej15.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography.Pkcs;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
+
+namespace Dsw2026Ej15.Data
+{
+    public class PersistenceEf : IPersistence
+    {
+        private readonly AppDbContext _context;
+
+        public PersistenceEf(AppDbContext contexto)
+        {
+            _context = contexto;
+
+        }
+        public async Task AddDoctor(Doctor doctor)
+        {
+            _context.Doctors.Add(doctor);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<Doctor>> GetAllDoctor()
+        {
+            return await _context.Doctors.AsNoTracking().Include(d => d.Speciality).Where(d => d.IsActive).ToListAsync();
+        }
+
+        public async Task<Doctor?> GetDoctorById(Guid id)
+        {
+            return await _context.Doctors.Include(d => d.Speciality).FirstOrDefaultAsync(d => d.IsActive && d.Id == id);
+        }
+
+        public async Task<Speciality?> GetSpecialityById(Guid id)
+        {
+            return await _context.Specialities.FirstOrDefaultAsync(s => s.Id == id);
+        }
+
+
+        public async Task UpdateDoctor(Doctor doctor)
+        {
+            _context.Doctors.Update(doctor);
+            await _context.SaveChangesAsync();
+        }
+    }
+    }

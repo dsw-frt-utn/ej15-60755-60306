@@ -16,48 +16,39 @@ namespace Dsw2026Ej15.Data
             this.LoadSpecialities();
         }
 
-        
-        public void AddDoctor(Doctor doctor)
+
+        public async Task AddDoctor(Doctor doctor)
         {
             _doctors.Add(doctor);
         }
 
-        public Doctor? GetDoctorActive(Guid id)
+        public async Task<Doctor?> GetDoctorById(Guid id)
         {
-        return _doctors.SingleOrDefault(d => d.Id == id && d.IsActive);
-         }
-        public void AddSpeciality(Speciality especialidad)
-        {
-            _specialities.Add(especialidad);
+            return _doctors.SingleOrDefault(d => d.Id == id && d.IsActive);
         }
 
-        public void RemoveDoctor(Doctor doctor)
+
+        public async Task DeleteDoctor(Guid id)
         {
-            _doctors.Remove(doctor);
+            var id_ = await GetDoctorById(id);
+            _doctors.Remove(id_);
         }
 
-        public void RemoveSpeciality(Speciality especialidad)
+
+
+        public async Task<IEnumerable<Doctor>> GetAllDoctor()
         {
-            _specialities.Remove(especialidad);
+            return _doctors.Where(d => d.IsActive).ToList();
         }
 
-        public List<Doctor> GetDoctorsActive()
-        {
-            return _doctors.Where(d=>d.IsActive).ToList();
-        }
 
-        public List<Speciality> GetSpecialities()
-        {
-            return _specialities;
-        }
 
-        public Speciality? GetSpeciality(Guid id)
+        public async Task<Speciality?> GetSpecialityById(Guid id)
         {
             return _specialities.SingleOrDefault(d => d.Id == id);
         }
 
-        // JSON
-        private void LoadSpecialities()
+        private async Task LoadSpecialities()
         {
             try
             {
@@ -68,14 +59,17 @@ namespace Dsw2026Ej15.Data
                 var speciality = JsonSerializer.Deserialize<List<SpecialityDto>>(json, options);
 
 
-                 _specialities = [.. speciality.Select(s => new Speciality(s.Name, s.Description, s.Id))];
+                _specialities = [.. speciality.Select(s => new Speciality(s.Name, s.Description, s.Id))];
             }
-            catch (Exception e){ }
+            catch (Exception e) { }
         }
 
-        public bool GetActive(Guid id)
+        public async Task UpdateDoctor(Doctor doctor)
         {
-            throw new NotImplementedException();
+            _doctors.Remove(doctor);
+            _doctors.Add(doctor);
         }
+
+
     }
 }
