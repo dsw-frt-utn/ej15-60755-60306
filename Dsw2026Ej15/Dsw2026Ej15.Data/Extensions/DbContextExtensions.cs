@@ -3,7 +3,7 @@ using Dsw2026Ej15.Domain.Entities;
 using System.Text.Json;
 using Dsw2026Ej15.Data.Dto;
 
-namespace Dsw2026Ej15.Api.Extensions
+namespace Dsw2026Ej15.Data.Extensions
 {
     public static class DbContextExtensions
     {

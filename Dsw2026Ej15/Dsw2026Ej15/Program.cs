@@ -1,9 +1,9 @@
 using Dsw2026Ej15.Domain.Interfaces;
 using Dsw2026Ej15.Data;
 using Microsoft.EntityFrameworkCore;
-using Dsw2026Ej15.Api.Extensions;
 using Dsw2026Ej15.Aplication.Interfaces;
 using Dsw2026Ej15.Aplication.Services;
+using Dsw2026Ej15.Api.Configurations;
 
 
 namespace Dsw2026Ej15.Api
@@ -13,11 +13,7 @@ namespace Dsw2026Ej15.Api
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnections");
-
-            builder.Services.AddDbContext<Dsw2026Ej15DbContext>(options=> {
-                options.UseSqlServer(connectionString);
-            });
+            builder.Services.AddApplicationPersistence(builder.Configuration);
             builder.Services.AddControllers();
             builder.Services.AddSwaggerGen();
             builder.Services.AddScoped<IPersistence, PersistenceEF>();
@@ -38,10 +34,7 @@ namespace Dsw2026Ej15.Api
             app.MapControllers();
             app.MapHealthChecks("/health-check");
 
-            using var scope = app.Services.CreateScope();
-            var services = scope.ServiceProvider;
-            var context = services.GetService<Dsw2026Ej15DbContext>();
-            context.SeedSpecialitiesFromJson(@"specialities.json");
+            app.LoadSpecialityData();
             app.Run();
 
 
